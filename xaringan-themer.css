@@ -18,9 +18,9 @@
  *  Version: 0.4.2
  *
  * ------------------------------------------------------- */
-@import url(https://fonts.googleapis.com/css?family=Lato&display=swap);
-@import url(https://fonts.googleapis.com/css?family=Martel&display=swap);
-@import url(https://fonts.googleapis.com/css?family=Fira+Mono&display=swap);
+@import url(https://fonts.googleapis.com/css?family=Lato:400&display=swap);
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:300&display=swap);
+@import url(https://fonts.googleapis.com/css?family=IBM+Plex+Mono&display=swap);
 
 
 :root {
@@ -29,10 +29,10 @@
   --text-font-is-google: 1;
   --text-font-family-fallback: -apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, helvetica, Ubuntu, roboto, noto, segoe ui, arial;
   --text-font-base: sans-serif;
-  --header-font-family: Martel;
+  --header-font-family: 'Open Sans';
   --header-font-is-google: 1;
   --header-font-family-fallback: Georgia, serif;
-  --code-font-family: 'Fira Mono';
+  --code-font-family: 'IBM Plex Mono';
   --code-font-is-google: 1;
   --base-font-size: 20px;
   --text-font-size: 1rem;
@@ -43,24 +43,23 @@
   --header-h3-font-size: 1.75rem;
 
   /* Colors */
-  --text-color: #000000;
-  --header-color: #1F4257;
-  --background-color: #FFFFFF;
-  --link-color: #380F2A;
-  --text-bold-color: #380F2A;
+  --text-color: #478769;
+  --header-color: #66C197;
+  --background-color: #EFF8F4;
+  --link-color: #66C197;
+  --text-bold-color: #66C197;
   --code-highlight-color: rgba(255,255,0,0.5);
-  --inverse-text-color: #FFFFFF;
-  --inverse-background-color: #380F2A;
-  --inverse-header-color: #FFFFFF;
-  --inverse-link-color: #380F2A;
-  --title-slide-background-color: #1F4257;
-  --title-slide-text-color: #FFFFFF;
-  --header-background-color: #1F4257;
-  --header-background-text-color: #FFFFFF;
-  --primary: #1F4257;
-  --secondary: #380F2A;
-  --white: #FFFFFF;
-  --black: #000000;
+  --inverse-text-color: #EFF8F4;
+  --inverse-background-color: #66C197;
+  --inverse-header-color: #EFF8F4;
+  --inverse-link-color: #66C197;
+  --title-slide-background-color: #66C197;
+  --title-slide-text-color: #EFF8F4;
+  --header-background-color: #66C197;
+  --header-background-text-color: #EFF8F4;
+  --base: #66C197;
+  --white: #EFF8F4;
+  --black: #478769;
 }
 
 html {
@@ -69,7 +68,7 @@ html {
 
 body {
   font-family: var(--text-font-family), var(--text-font-family-fallback), var(--text-font-base);
-  font-weight: normal;
+  font-weight: 400;
   color: var(--text-color);
 }
 h1, h2, h3 {
@@ -101,10 +100,10 @@ h1, h2, h3 {
 }
 .remark-inline-code {
   font-size: var(--code-inline-font-size);
-  color: #380F2A;
+  color: #66C197;
 }
 .remark-slide-number {
-  color: #1F4257;
+  color: #66C197;
   opacity: 1;
   font-size: 0.9rem;
 }
@@ -152,10 +151,10 @@ a, a > code {
   float: left;
 }
 .left-column h2, .left-column h3 {
-  color: #1F425799;
+  color: #66C19799;
 }
 .left-column h2:last-of-type, .left-column h3:last-child {
-  color: #1F4257;
+  color: #66C197;
 }
 .right-column {
   width: 75%;
@@ -177,7 +176,7 @@ img, video, iframe {
   max-width: 100%;
 }
 blockquote {
-  border-left: solid 5px #380F2A80;
+  border-left: solid 5px #66C19780;
   padding-left: 1em;
 }
 .remark-slide table {
@@ -194,7 +193,7 @@ th, td {
 .remark-slide table:not(.table-unshaded) thead,
 .remark-slide table:not(.table-unshaded) tfoot,
 .remark-slide table:not(.table-unshaded) tr:nth-child(even) {
-  background: #D7CFD4;
+  background: #E0F2EA;
 }
 table.dataTable tbody {
   background-color: var(--background-color);
@@ -204,7 +203,7 @@ table.dataTable.display tbody tr.odd {
   background-color: var(--background-color);
 }
 table.dataTable.display tbody tr.even {
-  background-color: #D7CFD4;
+  background-color: #E0F2EA;
 }
 table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   background-color: rgba(255, 255, 255, 0.5);
@@ -274,17 +273,11 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   }
 }
 
-.primary {
-  color: var(--primary);
+.base {
+  color: var(--base);
 }
-.bg-primary {
-  background-color: var(--primary);
-}
-.secondary {
-  color: var(--secondary);
-}
-.bg-secondary {
-  background-color: var(--secondary);
+.bg-base {
+  background-color: var(--base);
 }
 .white {
   color: var(--white);
