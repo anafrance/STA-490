@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Analyzing Melbourne Housing Market Data Via Parametric &amp; Bootstrap Multiple Linear Regression</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Gianna LaFrance &amp; Haley Koprivsek" />
+    <script src="PresentationMLRFinalUpdated_files/header-attrs/header-attrs.js"></script>
+    <script src="PresentationMLRFinalUpdated_files/kePrint/kePrint.js"></script>
+    <link href="PresentationMLRFinalUpdated_files/lightable/lightable.css" rel="stylesheet" />
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Analyzing Melbourne Housing Market Data Via Parametric &amp; Bootstrap Multiple Linear Regression
+]
+.subtitle[
+## <img src="housing-in-florida.jpg" width=300 height=160>
+]
+.author[
+### Gianna LaFrance &amp; Haley Koprivsek
+]
+
+---
+
+
+
+
+
+
+&lt;h1 align = "center"&gt; Table of Contents &lt;/h1&gt;
+&lt;center&gt;&lt;font size="7"&gt;  
+- Introduction &lt;br&gt;
+- Exploratory Data Analysis &lt;br&gt;
+- Performing Multiple Linear Regression &lt;br&gt;
+- Bootstrap Multiple Linear Regression &lt;br&gt;
+- Final Model &lt;br&gt;
+- Conclusion &amp; Discussion
+&lt;/font&gt;&lt;/center&gt;
+
+
+---
+name: colors
+
+## Introduction
+
+&lt;font size="5.5"&gt; 
+.pull-left[
+- Data set: Melboure housing market data from Jan. 2016 &lt;br&gt;&lt;br&gt;
+- 34,857 total observations, 21 variables. &lt;br&gt;&lt;br&gt;
+- Analysis via exploratory data analysis, several multiple linear regression models, &amp; bootstrap MLR&lt;br&gt;&lt;br&gt;
+- Response variable: selling price&lt;br&gt;&lt;br&gt;
+- Final model chosen from candidate models based on goodness-of-fit &amp; residual analysis
+]
+
+.pull-right[
+- 8 categorical variables, including:
+    - Suburb
+    - Type (house, townhouse, unit, etc.)
+    - Year Built
+- 13 numerical variables, including: 
+    - Selling Price (in Australian Dollars) (response)
+    - Number of Bedrooms
+    - Distance from Melbourne’s Central Business District (in kilometers)
+    - Latitude &amp; Longtitude
+]
+&lt;/font&gt;
+
+---
+class: inverse center middle
+
+# Exploratory Data Analysis
+
+
+---
+name: colors
+
+## Creating Group Location Variable Using Longitude and Latitude Data
+
+&lt;font size="5.5"&gt; 
+.pull-left[
+- Scatter plot based on latitude &amp; longitude revealed that vast majority of homes located in one central cluster &lt;br&gt;&lt;br&gt;
+- Factor variable created to indicate whether or not each home falls into this main cluster &lt;br&gt;&lt;br&gt;
+- **Type** also converted to a factor variable &lt;br&gt;&lt;br&gt;
+- **Distance** converted from character to numeric values &lt;br&gt;&lt;br&gt;
+]
+&lt;/font&gt;
+
+.pull-right[
+&lt;img src="PresentationMLRFinalUpdated_files/figure-html/unnamed-chunk-1-1.png" width="700px" height="450px" style="display: block; margin: auto 0 auto auto;" /&gt;
+]
+
+---
+class: inverse center middle
+
+# Parametric Multiple Linear Regression
+
+
+---
+name: colors
+
+## Initial Full Model
+
+.pull-left[
+&lt;table class="table" style="font-size: 16px; margin-left: auto; margin-right: auto;"&gt;
+&lt;caption style="font-size: initial !important;"&gt;Statistics of Regression Coefficients&lt;/caption&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Estimate &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Std. Error &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; t value &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Pr(&amp;gt;|t|) &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; (Intercept) &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 341598.26372 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 35441.748430 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9.6383017 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000000 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Rooms &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 191050.76381 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 20835.328167 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9.1695587 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000000 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Typet &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -330310.57353 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 19774.823888 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -16.7035912 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000000 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Typeu &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -397338.37437 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 17058.481520 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -23.2927165 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000000 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bedroom2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -10296.44660 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 20751.931053 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.4961681 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.6197876 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bathroom &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 259327.02431 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9512.669773 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 27.2612243 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000000 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Car &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 38405.27626 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6011.405633 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6.3887348 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000000 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Landsize &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 23.36419 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.723378 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.9464991 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000008 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; BuildingArea &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 34.83513 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 11.819982 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.9471386 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0032153 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; main.groupTRUE &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 204924.13563 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 23100.687825 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8.8709106 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000000 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Distance.num &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -36587.73611 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1000.907423 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -36.5545657 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000000 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+]
+
+.pull-right[
+&lt;img src="PresentationMLRFinalUpdated_files/figure-html/unnamed-chunk-3-1.png" width="100%" height="300px" /&gt;
+&lt;br&gt;&lt;br&gt;
+Residual plots suggest serious violations of both normality &amp; constant variance, potential outliers
+]
+
+---
+name: colors
+
+## Initial Full Model
+
+&lt;font size="5.5"&gt; 
+.pull-left[
+- VIF values suggest a serious multicollinearity issue between the **Rooms** (total # of rooms) &amp; **Bedroom2** (# of bedrooms) 
+&lt;br&gt;&lt;br&gt;
+- For lack of better remedy at the time, **Bedroom2** omitted from working data set
+]
+&lt;/font&gt;
+
+.pull-right[
+&lt;table class="table" style="font-size: 20px; margin-left: auto; margin-right: auto;"&gt;
+&lt;caption style="font-size: initial !important;"&gt;VIF Values for Each Explanatory Variable&lt;/caption&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; GVIF &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Df &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; GVIF^(1/(2*Df)) &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Rooms &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 14.743929 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.839782 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Type &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.550591 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.115898 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bedroom2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 14.697387 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.833717 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bathroom &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.739321 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.318833 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Car &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.257059 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.121186 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Landsize &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.200600 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.095719 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; BuildingArea &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.182319 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.087345 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; main.group &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.551974 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.245782 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Distance.num &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.733691 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.316697 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+]
+
+---
+name: colors
+
+## Box-Cox Model
+
+.pull-left[
+- Box-Cox transformation applied to **Price** (selling price) to attempt to remedy violations of assumptions of full model
+- New model constructed with Box-Cox transformed response variable with same explanatory variables 
+&lt;img src="PresentationMLRFinalUpdated_files/figure-html/unnamed-chunk-5-1.png" width="100%" height="400px" /&gt;
+]
+
+.pull-right[
+&lt;img src="PresentationMLRFinalUpdated_files/figure-html/unnamed-chunk-6-1.png" width="100%" height="300px" /&gt;
+- Residual plots for this model appear to align much more closely with model assumptions
+- Potential outliers not completely removed, but reduced in severity
+- Still some abberations at extreme ends of plots, so more models constructed to try to find even better fit
+]
+
+
+---
+name: colors
+
+## Square-Root Model
+
+
+- Another model constructed using square-root of response variable
+- Slightly better residual plots than those of full model, but still exhibits similar problems, just less severe
+
+
+&lt;img src="PresentationMLRFinalUpdated_files/figure-html/unnamed-chunk-7-1.png" width="100%" height="400px" /&gt;
+
+---
+name: colors
+
+## Log Model
+
+&lt;font size="5.5"&gt; 
+.pull-left[
+- One more candidate model constructed using log-transformed response variable &lt;br&gt;&lt;br&gt;
+- Residual plots better than those of the full model &amp; square-root model, but still exhibits aberrations at the extreme ends &lt;br&gt;&lt;br&gt;
+- Thus, Box-Cox model still appears to be most trustworthy based on residual analysis &lt;br&gt;&lt;br&gt;
+]
+&lt;/font&gt;
+
+.pull-right[
+&lt;img src="PresentationMLRFinalUpdated_files/figure-html/unnamed-chunk-8-1.png" width="100%" height="350px" /&gt;
+]
+
+---
+name: colors
+
+## Comparing Models by Goodness of Fit
+
+&lt;font size="5"&gt; 
+- Goodness-of-fit measures for each model largely aligned with the inferences drawn from residual analysis &lt;br&gt;&lt;br&gt;
+- Box-Cox model had highest adjusted r-squared value, lowest AIC, &amp; one of the lowest Mallows's C&lt;sub&gt;p&lt;/sub&gt; &lt;br&gt;&lt;br&gt;
+- Log model with second best GOF metrics, followed by Square Root model, and the full model performing worst &lt;br&gt;&lt;br&gt;
+- Based on GOF measures &amp; residual analysis, Box-Cox model chosen as final parametric model
+&lt;/font&gt;
+&lt;br&gt;&lt;br&gt;
+&lt;table&gt;
+&lt;caption&gt;Goodness-of-fit Measures of Candidate Models&lt;/caption&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; SSE &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; R.sq &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; R.adj &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Cp &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; AIC &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; SBC &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; PRESS &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; full.model &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.330619e+15 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.4538147 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.4532226 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 11 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 242479.12 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 242557.56 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.997066e+15 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Box.Cox.Model &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.504029e+00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.5730458 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.5726293 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -80533.29 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -80461.98 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.849876e+00 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Sqrt.Model &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.546316e+08 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.5257842 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.5253215 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 97503.13 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 97574.44 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.586422e+08 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Log.Model &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.143915e+03 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.5659606 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.5655372 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -19267.70 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -19196.40 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.439668e+03 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+
+
+---
+class: inverse center middle
+
+# Bootstrap Multiple Linear Regression
+
+---
+
+## Bootstrap Cases
+
+&lt;font size = "5"&gt;
+.pull-left[
+- 1000 bootstrap regression models fitted by sampling from original observations with replacement &lt;br&gt;&lt;br&gt;
+- 95% confidence interval constructed for the regression coefficient value of each explanatory variable based on bootstrap models &lt;br&gt;&lt;br&gt;
+- Observations missing a Box-Cox-transformed response variable value had to be omitted, but sufficient number of observations remained from which to make inferences 
+]
+&lt;/font&gt;
+
+
+.pull-right[
+&lt;table class="table" style="font-size: 15px; margin-left: auto; margin-right: auto;"&gt;
+&lt;caption style="font-size: initial !important;"&gt;Regression Coefficient Matrix&lt;/caption&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Estimate &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Std. Error &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; t value &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Pr(&amp;gt;|t|) &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; btc.ci.95 &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; (Intercept) &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 3.9881 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0009 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 4436.7370 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0000 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; [ 3.9697 ,  3.9807 ] &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Rooms &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0061 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0002 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 28.4553 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0000 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; [ 0.0059 ,  0.008 ] &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Typet &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; -0.0089 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0005 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; -17.6654 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0000 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; [ -0.0114 ,  -0.0087 ] &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Typeu &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; -0.0191 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0004 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; -44.1636 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0000 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; [ -0.0201 ,  -0.0177 ] &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bathroom &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0055 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0002 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 22.7799 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0000 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; [ 0.0039 ,  0.0062 ] &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Car &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0008 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0002 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 5.3428 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0000 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; [ 4e-04 ,  0.0015 ] &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Landsize &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0000 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0000 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 6.1161 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0000 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; [ 0 ,  0 ] &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; BuildingArea &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0000 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0000 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 3.2133 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0013 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; [ 0 ,  0 ] &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; main.groupTRUE &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0107 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0006 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 18.2807 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0000 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; [ 0.0177 ,  0.0277 ] &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Distance.num &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; -0.0010 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0000 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; -40.8271 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0000 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; [ -0.0016 ,  -0.0014 ] &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+]
+
+
+---
+
+## Bootstrap Histograms 
+
+&lt;font size = "4.2"&gt;
+.left-column[
+- Distribution of bootstrap coefficients roughly normal for most explanatory variables except for **main.group** significantly skewed
+- Discrepancy suggests that p-values of parametric model may not be entirely valid
+- Advisable to use bootstrap C.I.s for making inferences about relationship between variables
+]
+&lt;/font&gt;
+
+.right-column[
+&lt;img src="PresentationMLRFinalUpdated_files/figure-html/unnamed-chunk-12-1.png" width="100%" height="360px" /&gt;
+]
+
+---
+name: colors
+
+## Bootstrap Residuals
+
+.pull-left[
+- Large number of bootstrap samples taken from the residuals of the original model, residuals in each sample are added to the fitted values of corresponding observations, gives new sets of predicted y values 
+
+- Each sample of new predicted y value together with the original observations is used to generate new regression models, regression coefficients of each are extracted and used to construct the confidence intervals
+
+- Needed to remove all observations with missing values, but CLT still holds for new data set 
+ 
+- New Box-Cox model generated using this new data set to use in the bootstrapping procedure
+]
+
+.pull-right[
+&lt;table class="table" style="font-size: 15px; margin-left: auto; margin-right: auto;"&gt;
+&lt;caption style="font-size: initial !important;"&gt;Regression Coefficient Matrix with 95% Residual Bootstrap CI&lt;/caption&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Estimate &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Std. Error &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; t value &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Pr(&amp;gt;|t|) &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; btr.ci.95 &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; (Intercept) &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 3.9881 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0009 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 4436.7370 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0000 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; [ 3.9854 ,  3.9905 ] &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Rooms &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0061 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0002 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 28.4553 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0000 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; [ 0.0055 ,  0.0067 ] &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Typet &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; -0.0089 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0005 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; -17.6654 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0000 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; [ -0.0103 ,  -0.0074 ] &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Typeu &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; -0.0191 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0004 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; -44.1636 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0000 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; [ -0.0203 ,  -0.0178 ] &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bathroom &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0055 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0002 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 22.7799 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0000 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; [ 0.0048 ,  0.0061 ] &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Car &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0008 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0002 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 5.3428 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0000 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; [ 4e-04 ,  0.0012 ] &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Landsize &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0000 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0000 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 6.1161 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0000 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; [ 0 ,  0 ] &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; BuildingArea &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0000 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0000 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 3.2133 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0013 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; [ 0 ,  0 ] &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; main.groupTRUE &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0107 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0006 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 18.2807 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0000 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; [ 0.0091 ,  0.0125 ] &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Distance.num &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; -0.0010 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0000 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; -40.8271 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0000 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; [ -0.0011 ,  -0.001 ] &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+]
+
+---
+names: colors
+
+## Bootstrap Residuals
+
+&lt;img src="PresentationMLRFinalUpdated_files/figure-html/unnamed-chunk-14-1.png" width="100%" /&gt;
+
+---
+class: inverse center middle
+
+# Final Model
+
+---
+name: colors
+
+## Final Model
+
+BoxCox(**Price**) = 3.9881 + 0.0061x**Rooms** - 0.0089x**Typet** - 0.0191x**Typeu** + 0.0055x**Bathroom** + 0.0008x**Car** +0.0000007x**Landsize** +0.000001x**BuildingArea** + 0.0107x**main.groupTRUE** - 0.0010x**Distance.num**, where BoxCox(**Price**) represents the value of price after the Box-Cox transformation is applied where lambda = -0.24. 
+
+&lt;table&gt;
+&lt;caption&gt;Inferential Statistics of Final Model&lt;/caption&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Estimate &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Std. Error &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; t value &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Pr(&amp;gt;|t|) &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; (Intercept) &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.9880855 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0008989 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4436.736954 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000000 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Rooms &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0060549 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0002128 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 28.455261 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000000 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Typet &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.0088665 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0005019 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -17.665360 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000000 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Typeu &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.0191099 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0004327 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -44.163583 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000000 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bathroom &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0054608 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0002397 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 22.779941 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000000 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Car &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0008148 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0001525 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.342843 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000001 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Landsize &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000007 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000001 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6.116052 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000000 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; BuildingArea &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000010 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000003 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.213317 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0013166 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; main.groupTRUE &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0107272 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0005868 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 18.280685 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000000 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Distance.num &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.0010369 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000254 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -40.827076 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000000 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+class: inverse center middle
+
+# Conclusion &amp; Discussion
+
+---
+class: colors
+
+## Conclusion
+
+&lt;font size="5.75"&gt;
+- Regression coefficients generally aligned with intuition e.g., selling price positively associated with the number of rooms, negatively associated with distance from desirable part of city, etc.  &lt;br&gt;&lt;br&gt;
+
+- The bootstrap regression results very similar to estimates of the final parametric model&lt;br&gt;&lt;br&gt;
+
+- Bootstrap results likely more trustworthy than p-values of parametric model because violations of assumptions of normality/constant variance not issues for non-parametric approach
+&lt;/font&gt;
+
+
+
+---
+class: inverse center middle
+
+# Questions?
+
+
+---
+class: colors
+
+## Contributions
+
+- Content ~ Haley
+- Slide Style ~ Gianna
+- Edit Content/Slides ~ Haley, Gianna
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"slideNumberFormat": "%current%",
+"highlightStyle": "github",
+"highlightLines": true,
+"ratio": "16:9",
+"countIncrementalSlides": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
